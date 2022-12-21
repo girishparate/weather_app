@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{%load static%}
+{% block contain %}
+
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Search By City</button>
+        </li>
+        <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">My Search History</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+        <!-- for searching new weather data -->
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <!-- form  -->
+            <div class="container">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="city_name" class="form-label">Enter City Name</label>
+                            <input type="text" class="form-control" id="city_name" name="city" required>
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+            <br><br>
+            <div>
+                {% if temperature %}
+                {% if weather_data_location != "Error" %}
+                <div class="card">
+                    <h5 class="card-header">Weather in {{city}}</h5>
+                    <div class="card-body">
+                      <h5 class="card-title">{{weather_text}} ({{temperature}}&deg;C) </h5>
+                      <p class="card-text">In {{city}}, the temperature is {{temperature}}&deg;C. And the weather is <strong>{{weather_text}}</strong>.</p>
+                    </div>
+                </div>
+                {% endif %}
+                {% endif %}
+            </div>
+
+        </div>
+        <!-- for getting old weather data -->
+        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                <h4>History</h4>
+                {% for data in user_search_history %}
+                <div class="card">
+                    <h5 class="card-header">Weather in {{data.city_name}}</h5>
+                    <div class="card-body">
+                      <h5 class="card-title">{{data.weather_data.0.WeatherText }} ({{data.weather_data.0.Temperature.Metric.Value }} &deg;C) </h5>
+                      <p class="card-text">In {{data.city_name}}, the temperature was {{data.weather_data.0.Temperature.Metric.Value }}&deg;C. And the weather was <strong>{{data.weather_data.0.WeatherText }}</strong></p>
+                    </div>
+                </div>
+                {% endfor %}
+        </div>
+    </div>
+    
+{% endblock %}
+{% block js_files %}
+<script type="text/javascript" src="{% static 'js/registration.js' %}"></script>
+{% endblock %}
