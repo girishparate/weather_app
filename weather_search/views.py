@@ -16,7 +16,7 @@ class Search(APIView):
 
     def post(self, request):
         city_name = request.data['city']
-        payload_city = {'apikey':'DjZKAe436auERjukIt9nL1yo1NGaMkde', 'q':city_name, 'language':'en-us', 'details':'false', 'offset':0}
+        payload_city = {'apikey':'', 'q':city_name, 'language':'en-us', 'details':'false', 'offset':0}
         response = requests.get('http://dataservice.accuweather.com/locations/v1/cities/search', payload_city)
         city_information = response.json()
         location_key = 0
@@ -25,7 +25,7 @@ class Search(APIView):
             for city in city_information:
                 location_key = city['Key']
 
-            payload_weather = {'apikey':'DjZKAe436auERjukIt9nL1yo1NGaMkde'}
+            payload_weather = {'apikey':''}
             api_endpoint = 'http://dataservice.accuweather.com/currentconditions/v1/'+location_key
             weather_data_location = requests.get(api_endpoint, payload_weather)
 
